@@ -10,7 +10,7 @@ Spyder dialog widgets.
 
 # Third-party imports
 from qtpy.QtCore import Qt
-from qtpy.QtGui import QIcon
+from qtpy.QtGui import QIcon, PYQT5, PYSIDE2
 from qtpy.QtWidgets import QDialogButtonBox, QProxyStyle, QStyle
 
 # Local imports
@@ -26,7 +26,10 @@ class _SpyderButtonsProxyStyle(QProxyStyle):
             # platforms. We selected that layout because Windows is our most
             # popular platform.
             # Solution found in https://stackoverflow.com/a/35907926/438386
-            return QDialogButtonBox.WinLayout
+            if PYQT5 or PYSIDE2:
+                return QDialogButtonBox.WinLayout
+            else:    # PYQT6: need to return an int, not enum
+                return QDialogButtonBox.WinLayout.value
 
         return super().styleHint(hint, option, widget, return_data)
 
